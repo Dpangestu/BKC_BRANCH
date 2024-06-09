@@ -1,10 +1,24 @@
+import 'package:bkc_super_app/Repository/AuthService.dart';
+import 'package:bkc_super_app/Service/api_service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:feather_icons/feather_icons.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final ApiService _apiService = ApiService();
+  late final AuthService _authService;
+  final _formKey = GlobalKey<FormState>();
+  late String _username, _password;
+
+  @override
+  void initState() {
+    super.initState();
+    _authService = AuthService(_apiService);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,57 +89,79 @@ class LoginScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
 
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(0, 3), // changes position of shadow
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Username",
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.all(10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan masukkan username';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _username = value ?? '',
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: "Password",
+                            filled: true,
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.all(10),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Silakan masukkan password';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) => _password = value ?? '',
+                        ),
                       ),
                     ],
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: "Username",
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.all(10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: Offset(0, 3), // changes position of shadow
-                      ),
-                    ],
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.all(10),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
                   ),
                 ),
 
@@ -135,42 +171,77 @@ class LoginScreen extends StatelessWidget {
                   children: [
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(10),
+                        color: Color(0xff225CAB),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 90, vertical: 16),
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Text('Login', style: TextStyle(fontSize: 18)),
+                          horizontal: 120, vertical: 16),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            try {
+                              final user = await _authService.login(
+                                  _username, _password);
+                              // Handle successful login
+                              print('Login successful: ${user.token}');
+                            } catch (e) {
+                              // Handle login error
+                              print('Login failed: $e');
+                            }
+                          }
+                        },
+                        child: Text('Login'),
                       ),
                     ),
                     Spacer(),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(10),
+                        color: Color(0xff225CAB),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 50, vertical: 16),
+                          horizontal: 30, vertical: 16),
                       child: GestureDetector(
                         onTap: () {},
-                        child: Icon(FeatherIcons.save, size: 18),
+                        child: Center(
+                          child: Icon(Icons.fingerprint,
+                              size: 18, color: Colors.white),
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
                 const SizedBox(height: 20),
 
                 TextButton(
                   onPressed: () {},
-                  child: const Text(
-                    'Don\'t have an account yet? Sign Up',
-                    style: TextStyle(
-                      color: Colors.blue,
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Don\'t have an account yet? ',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'Futura',
+                            fontWeight: FontWeight.w200,
+                            color: Colors.black,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Sign Up',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: 'Futura',
+                            fontWeight: FontWeight.w200,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ),

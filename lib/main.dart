@@ -1,3 +1,4 @@
+import 'package:bkc_super_app/screens/dashboard.dart';
 import 'package:bkc_super_app/screens/splashscreen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,8 +15,10 @@ class MyApp extends StatelessWidget {
       title: 'BKC SUPER BRANCH',
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
+      routes: {
+        '/dashboard': (context) => DashboardScreen(),
+      },
       theme: ThemeData(
-        // colorScheme: ColorScheme.fromSeed(seedColor: colo)
         useMaterial3: true,
       ),
       // debugShowCheckedModeBanner: false,

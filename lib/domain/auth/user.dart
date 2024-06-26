@@ -1,41 +1,41 @@
 class User {
   final int id;
   final String username;
-  final String fullName;
-  final String roleId;
-  final String unitOfWork;
+  final String nama_lengkap;
+  final String id_role;
+  final String unit_kerja;
   final String email;
-  final DateTime? emailVerifiedAt; // Gunakan DateTime? karena bisa null
+  final DateTime? emailVerifiedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
   final int status;
-  final int loginAttempts;
-  final DateTime? lockoutUntil; // Gunakan DateTime? karena bisa null
-  final String token; // Tambahkan properti token
+  final int login_attempts;
+  final DateTime? lockout_until;
+  final String token;
 
   User({
     required this.id,
     required this.username,
-    required this.fullName,
-    required this.roleId,
-    required this.unitOfWork,
+    required this.nama_lengkap,
+    required this.id_role,
+    required this.unit_kerja,
     required this.email,
     this.emailVerifiedAt,
     required this.createdAt,
     required this.updatedAt,
     required this.status,
-    required this.loginAttempts,
-    this.lockoutUntil,
-    required this.token, // Inisialisasikan properti token di konstruktor
+    required this.login_attempts,
+    this.lockout_until,
+    required this.token,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'],
       username: json['username'],
-      fullName: json['nama_lengkap'],
-      roleId: json['id_role'],
-      unitOfWork: json['unit_kerja'],
+      nama_lengkap: json['nama_lengkap'],
+      id_role: json['id_role'],
+      unit_kerja: json['unit_kerja'],
       email: json['email'],
       emailVerifiedAt: json['email_verified_at'] != null
           ? DateTime.parse(json['email_verified_at'])
@@ -43,11 +43,11 @@ class User {
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
       status: json['status'],
-      loginAttempts: json['login_attempts'],
-      lockoutUntil: json['lockout_until'] != null
+      login_attempts: json['login_attempts'],
+      lockout_until: json['lockout_until'] != null
           ? DateTime.parse(json['lockout_until'])
           : null,
-      token: json['access_token'], // Assign token from JSON response
+      token: json['access_token'] ?? '',
     );
   }
 }

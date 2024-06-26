@@ -1,4 +1,6 @@
 import 'package:bkc_super_app/screens/dashboard.dart';
+import 'package:bkc_super_app/screens/pages/data_master/data_master.dart';
+import 'package:bkc_super_app/screens/pages/master_data.dart';
 import 'package:bkc_super_app/screens/splashscreen.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +18,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
       routes: {
-        '/dashboard': (context) => DashboardScreen(),
+        '/dashboard': (context) => Dashboard(),
+        '/data_master': (context) => MasterData(),
       },
       theme: ThemeData(
         useMaterial3: true,

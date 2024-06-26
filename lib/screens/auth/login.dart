@@ -6,6 +6,8 @@ import '../../infrastructure/auth/auth_repository.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -13,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   late String _username, _password;
+  bool _isPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +35,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 (user) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Login successful: ${user.token}')),
+                    SnackBar(content: Text('Login Berhasil')),
                   );
                   print('Login successful: ${user.token}');
+                  Navigator.of(context).pushReplacementNamed('/dashboard');
                 },
               ),
             );
@@ -92,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       const SizedBox(height: 25),
-                      Align(
+                      const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Silahkan Login untuk Melanjutkan',
@@ -117,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 5,
-                                    offset: Offset(0, 3),
+                                    offset: const Offset(0, 3),
                                   ),
                                 ],
                               ),
@@ -151,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Colors.grey.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 5,
-                                    offset: Offset(0, 3),
+                                    offset: const Offset(0, 3),
                                   ),
                                 ],
                               ),
@@ -165,14 +169,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide.none,
                                   ),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _isPasswordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isPasswordVisible =
+                                            !_isPasswordVisible;
+                                      });
+                                    },
+                                  ),
                                 ),
-                                obscureText: true,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Silakan masukkan password';
                                   }
                                   return null;
                                 },
+                                obscureText: !_isPasswordVisible,
                                 onSaved: (value) => _password = value ?? '',
                               ),
                             ),
@@ -184,34 +201,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Color(0xff225CAB),
+                              color: const Color(0xff225CAB),
                               borderRadius: BorderRadius.circular(30),
                             ),
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 120, vertical: 16),
+                                horizontal: 89, vertical: 1.5),
                             child: ElevatedButton(
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
                                   context.read<AuthBloc>().add(
-                                        AuthEvent(_username, _password),
+                                        AuthEvent(
+                                            _username, _password, context),
                                       );
                                 }
                               },
-                              child: Text('Login'),
+                              child: const Text('Login'),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Container(
                             decoration: BoxDecoration(
-                              color: Color(0xff225CAB),
+                              color: const Color(0xff225CAB),
                               borderRadius: BorderRadius.circular(30),
                             ),
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 30, vertical: 16),
                             child: GestureDetector(
                               onTap: () {},
-                              child: Center(
+                              child: const Center(
                                 child: Icon(Icons.fingerprint,
                                     size: 18, color: Colors.white),
                               ),
@@ -223,7 +241,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextButton(
                         onPressed: () {},
                         child: RichText(
-                          text: TextSpan(
+                          text: const TextSpan(
                             children: [
                               TextSpan(
                                 text: 'Don\'t have an account yet? ',

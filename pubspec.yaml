@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   dartz: ^0.10.1
+  equatable: ^2.0.5
   feather_icons: ^1.2.0
   flutter:
     sdk: flutter

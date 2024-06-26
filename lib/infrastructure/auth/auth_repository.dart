@@ -1,6 +1,8 @@
-import 'package:dartz/dartz.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:dartz/dartz.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 import '../../domain/auth/auth_failure.dart';
 import '../../domain/auth/auth_repository_interface.dart';
 import '../../domain/auth/user.dart';
@@ -14,9 +16,9 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<Either<AuthFailure, User>> login(
-      String username, String password) async {
+      String username, String password, BuildContext context) async {
     print(
-        'Sending login request with username: $username and password: $password');
+        'Sending login request with username: $username, password: $password');
 
     try {
       final response = await _client.post(
@@ -31,13 +33,20 @@ class AuthRepository implements AuthRepositoryInterface {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         final authDTO = AuthDTO.fromJson(json);
-        return right(authDTO.toDomain());
+        final user = authDTO.toDomain();
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('accessToken', authDTO.accessToken);
+
+        Navigator.of(context).pushReplacementNamed('/dashboard');
+
+        return Right(user);
       } else {
-        return left(AuthFailure('Login failed: ${response.body}'));
+        return Left(AuthFailure('Login failed: ${response.body}'));
       }
     } catch (e) {
       print('Error: $e');
-      return left(AuthFailure('Unexpected error: $e'));
+      return Left(AuthFailure('Unexpected error: $e'));
     }
   }
 }

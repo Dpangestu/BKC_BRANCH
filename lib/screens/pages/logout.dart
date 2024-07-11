@@ -12,9 +12,9 @@ class _LogoutState extends State<Logout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Logout'),
+        title: const Text('Logout'),
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'Logout Page',
           style: TextStyle(fontSize: 40),

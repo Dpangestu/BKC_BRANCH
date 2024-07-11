@@ -1,3 +1,4 @@
+import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,12 +14,23 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String _username, _password;
   bool _isPasswordVisible = false;
 
+  void _validateForm() {
+    final form = _formKey.currentState;
+    if (form!.validate()) {
+      form.save();
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final padding = screenSize.width * 0.05;
+
     return Scaffold(
       body: BlocProvider(
         create: (context) => AuthBloc(AuthRepository(http.Client())),
@@ -28,17 +40,66 @@ class _LoginScreenState extends State<LoginScreen> {
               () {},
               (either) => either.fold(
                 (failure) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(failure.message)),
+                  // Show error dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      // title: const Text('Login Gagal'),
+                      content: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            FeatherIcons.xCircle,
+                            color: Colors.red,
+                            size: 48,
+                          ),
+                          SizedBox(height: 16),
+                          Text('Login Gagal'),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
                   );
-                  print('Login failed: ${failure.message}');
                 },
                 (user) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Login Berhasil')),
+                  // Show success dialog
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                        // title: const Text('Login Berhasil'),
+                        content: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              FeatherIcons.checkCircle,
+                              color: Colors.green,
+                              size: 48,
+                            ),
+                            SizedBox(height: 16),
+                            Text('Login Berhasil'),
+                          ],
+                        ),
+                        actions: [
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context)
+                                      .pushReplacementNamed('/dashboard');
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        ]),
                   );
-                  print('Login successful: ${user.token}');
-                  Navigator.of(context).pushReplacementNamed('/dashboard');
                 },
               ),
             );
@@ -57,18 +118,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(padding),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenSize.height * 0.02),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset('assets/svg/icon.svg', width: 24.68),
-                          const SizedBox(width: 8),
+                          SvgPicture.asset('assets/svg/icon.svg',
+                              width: screenSize.width * 0.08),
+                          SizedBox(width: screenSize.width * 0.02),
                           RichText(
-                            text: const TextSpan(
+                            text: TextSpan(
                               children: [
                                 TextSpan(
                                   text: 'BKC ',
@@ -76,8 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.w800,
                                     fontStyle: FontStyle.italic,
-                                    fontSize: 19,
-                                    color: Color(0xFF171047),
+                                    fontSize: screenSize.width * 0.05,
+                                    color: const Color(0xFF171047),
                                   ),
                                 ),
                                 TextSpan(
@@ -86,8 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     fontFamily: 'Montserrat',
                                     fontWeight: FontWeight.w800,
                                     fontStyle: FontStyle.italic,
-                                    fontSize: 19,
-                                    color: Color(0xFF225CAB),
+                                    fontSize: screenSize.width * 0.05,
+                                    color: const Color(0xFF225CAB),
                                   ),
                                 ),
                               ],
@@ -95,19 +157,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 25),
-                      const Align(
+                      SizedBox(height: screenSize.height * 0.03),
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           'Silahkan Login untuk Melanjutkan',
                           style: TextStyle(
-                            fontSize: 13,
+                            fontSize: screenSize.width * 0.03,
                             fontFamily: 'Futura',
                             fontWeight: FontWeight.w200,
                           ),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: screenSize.height * 0.02),
                       Form(
                         key: _formKey,
                         child: Column(
@@ -130,7 +192,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   labelText: "Username",
                                   filled: true,
                                   fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.all(10),
+                                  contentPadding:
+                                      EdgeInsets.all(screenSize.width * 0.03),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide.none,
@@ -145,7 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 onSaved: (value) => _username = value ?? '',
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            SizedBox(height: screenSize.height * 0.02),
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -164,7 +227,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   labelText: "Password",
                                   filled: true,
                                   fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.all(10),
+                                  contentPadding:
+                                      EdgeInsets.all(screenSize.width * 0.03),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     borderSide: BorderSide.none,
@@ -196,18 +260,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      SizedBox(height: screenSize.height * 0.04),
                       Row(
                         children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xff225CAB),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 89, vertical: 1.5),
+                          Expanded(
                             child: ElevatedButton(
                               onPressed: () async {
+                                _validateForm();
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
                                   context.read<AuthBloc>().add(
@@ -216,37 +275,37 @@ class _LoginScreenState extends State<LoginScreen> {
                                       );
                                 }
                               },
-                              child: const Text('Login'),
-                            ),
-                          ),
-                          const Spacer(),
-                          Container(
-                            decoration: BoxDecoration(
-                              color: const Color(0xff225CAB),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 16),
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: const Center(
-                                child: Icon(Icons.fingerprint,
-                                    size: 18, color: Colors.white),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff225CAB),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: screenSize.height * 0.015),
+                              ),
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                  fontSize: screenSize.width * 0.04,
+                                  color: Colors.white,
+                                  fontFamily: 'Futura',
+                                  fontWeight: FontWeight.w200,
+                                ),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenSize.height * 0.03),
                       TextButton(
                         onPressed: () {},
                         child: RichText(
-                          text: const TextSpan(
+                          text: TextSpan(
                             children: [
                               TextSpan(
                                 text: 'Don\'t have an account yet? ',
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: screenSize.width * 0.03,
                                   fontFamily: 'Futura',
                                   fontWeight: FontWeight.w200,
                                   color: Colors.black,
@@ -255,7 +314,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               TextSpan(
                                 text: 'Sign Up',
                                 style: TextStyle(
-                                  fontSize: 13,
+                                  fontSize: screenSize.width * 0.03,
                                   fontFamily: 'Futura',
                                   fontWeight: FontWeight.w200,
                                   color: Colors.blue,

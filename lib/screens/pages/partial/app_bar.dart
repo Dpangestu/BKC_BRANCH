@@ -1,10 +1,12 @@
-part of '../data_master.dart';
+part of '../home.dart';
 
 class Greetings extends StatelessWidget {
+  const Greetings({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -17,19 +19,23 @@ class Greetings extends StatelessWidget {
 }
 
 class Logo extends StatelessWidget {
+  const Logo({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         SvgPicture.asset('assets/svg/icon.svg', width: 17.42),
         const SizedBox(width: 8),
-        BranchName(),
+        const BranchName(),
       ],
     );
   }
 }
 
 class BranchName extends StatelessWidget {
+  const BranchName({super.key});
+
   @override
   Widget build(BuildContext context) {
     return RichText(
@@ -62,6 +68,8 @@ class BranchName extends StatelessWidget {
 }
 
 class NotificationButton extends StatelessWidget {
+  const NotificationButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return IconButton(

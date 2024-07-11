@@ -15,8 +15,8 @@ class AuthDTO {
 
   factory AuthDTO.fromJson(Map<String, dynamic> json) {
     return AuthDTO(
-      accessToken: json['access_token'] ?? '', // Tambahkan handling null
-      tokenType: json['token_type'] ?? 'bearer', // Default token type jika null
+      accessToken: json['access_token'] ?? '',
+      tokenType: json['token_type'] ?? 'bearer',
       expiresIn: json['expires_in'],
       user: User.fromJson(json['user']),
     );

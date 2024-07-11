@@ -1,5 +1,5 @@
 import 'package:bkc_super_app/screens/auth/login.dart';
-import 'package:bkc_super_app/screens/dashboard.dart';
+// import 'package:bkc_super_app/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,20 +12,22 @@ class SplashScreen extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     Future.delayed(const Duration(seconds: 8)).then((value) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
           (route) => false);
     });
 
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Stack(
         children: [
-          Image.asset(
-            'assets/images/screen_splass_2.png',
-            height: size.height,
-            width: size.width,
-            fit: BoxFit.cover,
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/screen_splass_2.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           SafeArea(
             child: Center(

@@ -14,25 +14,35 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   int _currentTab = 0;
-  final List<Widget> _screens = [Home(), Activity(), Profile(), Logout()];
+  final List<Widget> _screens = [
+    const Home(),
+    const Activity(),
+    const Profile(),
+    const Logout()
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_currentTab],
       floatingActionButton: FloatingActionButton(
-        child: Icon(
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () {},
-        backgroundColor: Color(0xFF225CAB),
+        onPressed: () {
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(builder: (context) => DataMaster()),
+          // );
+          Navigator.of(context).pushNamed('/transaksi');
+        },
+        backgroundColor: const Color(0xFF225CAB),
         elevation: 6,
-        shape: CircleBorder(),
+        shape: const CircleBorder(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
         child: Container(
           height: 60,
@@ -42,8 +52,8 @@ class _DashboardState extends State<Dashboard> {
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildNavItem(0, FeatherIcons.home, 'Home'),
-                  _buildNavItem(1, FeatherIcons.fileText, 'Activity'),
+                  _buildNavItem(0, FeatherIcons.home, 'Branda'),
+                  _buildNavItem(1, FeatherIcons.fileText, 'Aktifitas'),
                 ],
               ),
               Row(
@@ -73,12 +83,13 @@ class _DashboardState extends State<Dashboard> {
         children: [
           Icon(
             icon,
-            color: _currentTab == index ? Color(0xFF225CAB) : Colors.black,
+            color:
+                _currentTab == index ? const Color(0xFF225CAB) : Colors.black,
           ),
           _currentTab == index
               ? Text(
                   label,
-                  style: TextStyle(color: Color(0xFF225CAB)),
+                  style: const TextStyle(color: Color(0xFF225CAB)),
                 )
               : Container(),
         ],

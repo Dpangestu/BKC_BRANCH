@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:bkc_super_app/screens/pages/data_master/data_master.dart';
 import 'package:feather_icons/feather_icons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+part '../pages/partial/app_bar.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -13,57 +14,47 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: Text('Home'),
-  //     ),
-  //     body: Center(
-  //       child: Text(
-  //         'Home Page',
-  //         style: TextStyle(fontSize: 40),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Greetings(),
-      // ),
+      appBar: AppBar(
+        title: const Greetings(),
+      ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Greetings(),
-            const SizedBox(height: 16),
-            _card(),
-            const SizedBox(height: 21),
-            _search(),
-            const SizedBox(height: 21),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _menu(context),
-                    const SizedBox(height: 16),
-                  ],
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final width = constraints.maxWidth;
+            final height = constraints.maxHeight;
+            final isPortrait = height > width;
+            return Column(
+              children: [
+                _card(width, height),
+                const SizedBox(height: 21),
+                _search(),
+                const SizedBox(height: 21),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _menu(context, width),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _menu(BuildContext context) {
+  Widget _menu(BuildContext context, double width) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: GridView.count(
-        crossAxisCount: 4,
+        crossAxisCount: width > 600 ? 6 : 4,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         shrinkWrap: true,
@@ -71,21 +62,19 @@ class _HomeState extends State<Home> {
         children: [
           GestureDetector(
             onTap: () {
-              // Navigator.of(context).pushReplacement(
-              //   MaterialPageRoute(builder: (context) => DataMaster()),
-              // );
               Navigator.of(context).pushNamed('/data_master');
             },
             child: Column(
               children: [
                 _menuItem(
                   icon: 'assets/svg/data_master.svg',
+                  width: width,
                 ),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   'Data Master',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Futura',
                   ),
@@ -101,12 +90,13 @@ class _HomeState extends State<Home> {
               children: [
                 _menuItem(
                   icon: 'assets/svg/laporan.svg',
+                  width: width,
                 ),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   'Laporan',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Futura',
                   ),
@@ -122,12 +112,13 @@ class _HomeState extends State<Home> {
               children: [
                 _menuItem(
                   icon: 'assets/svg/transaksi.svg',
+                  width: width,
                 ),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   'Transaksi',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Futura',
                   ),
@@ -143,12 +134,13 @@ class _HomeState extends State<Home> {
               children: [
                 _menuItem(
                   icon: 'assets/svg/payment_point.svg',
+                  width: width,
                 ),
                 const SizedBox(height: 8),
-                Text(
+                const Text(
                   'Payment Point',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Futura',
                   ),
@@ -161,27 +153,27 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _menuItem({required String icon}) {
+  Widget _menuItem({required String icon, required double width}) {
     return Container(
-      width: 65,
-      height: 65,
+      width: width * 0.15,
+      height: width * 0.15,
       decoration: BoxDecoration(
-        color: const Color(0xffE6F4F8),
+        color: const Color.fromARGB(255, 237, 244, 246),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 0,
             blurRadius: 5,
-            offset: Offset(0, 5),
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Center(
         child: SvgPicture.asset(
           icon,
-          width: 50,
-          height: 50,
+          width: width * 0.12,
+          height: width * 0.12,
         ),
       ),
     );
@@ -197,7 +189,7 @@ class _HomeState extends State<Home> {
               color: Colors.grey.withOpacity(0.5),
               spreadRadius: 0,
               blurRadius: 4,
-              offset: Offset(0, 4),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -226,15 +218,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _card() {
+  Widget _card(double width, double height) {
     return AspectRatio(
       aspectRatio: 313 / 116,
       child: Container(
         clipBehavior: Clip.hardEdge,
         margin: const EdgeInsets.symmetric(horizontal: 16),
-        height: 200,
+        height: height * 0.2,
         decoration: BoxDecoration(
-          color: Color(0xff225CAB),
+          color: const Color(0xff225CAB),
           borderRadius: BorderRadius.circular(14),
         ),
         child: Stack(
@@ -243,28 +235,28 @@ class _HomeState extends State<Home> {
               alignment: Alignment.centerRight,
               child: SvgPicture.asset(
                 'assets/svg/batik_pattren.svg',
-                width: 180,
+                width: width * 0.5,
                 fit: BoxFit.cover,
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22),
+              padding: const EdgeInsets.symmetric(horizontal: 22),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
-                      Image.asset('assets/images/logo_putih.png', width: 95),
+                      Image.asset('assets/images/logo_putih.png',
+                          width: width * 0.25),
                     ],
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: height * 0.05),
                   const Text(
                     'Saldo KAS Hari ini',
                     style: TextStyle(
                       fontFamily: 'Futura',
                       fontSize: 18,
-                      // fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),

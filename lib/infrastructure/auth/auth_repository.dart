@@ -1,8 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:dartz/dartz.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
 import '../../domain/auth/auth_failure.dart';
 import '../../domain/auth/auth_repository_interface.dart';
 import '../../domain/auth/user.dart';
@@ -37,8 +37,6 @@ class AuthRepository implements AuthRepositoryInterface {
 
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('accessToken', authDTO.accessToken);
-
-        Navigator.of(context).pushReplacementNamed('/dashboard');
 
         return Right(user);
       } else {

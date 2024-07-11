@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class MasterData extends StatefulWidget {
-  const MasterData({super.key});
+class Transaksi extends StatefulWidget {
+  const Transaksi({super.key});
 
   @override
-  State<MasterData> createState() => _MasterDataState();
+  State<Transaksi> createState() => _TransaksiState();
 }
 
-class _MasterDataState extends State<MasterData> {
+class _TransaksiState extends State<Transaksi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +22,7 @@ class _MasterDataState extends State<MasterData> {
           },
         ),
         title: const Text(
-          'Data Master',
+          'Transaksi',
           style: TextStyle(
             fontSize: 18,
             color: Color(0xffFFFFFF),
@@ -68,7 +68,7 @@ Widget _menu(BuildContext context) {
             // Navigator.of(context).pushReplacement(
             //   MaterialPageRoute(builder: (context) => DataMaster()),
             // );
-            Navigator.of(context).pushNamed('/data_tabungan');
+            Navigator.of(context).pushNamed('/setor_tabungan');
           },
           child: Column(
             children: [

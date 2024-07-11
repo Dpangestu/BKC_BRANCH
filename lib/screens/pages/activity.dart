@@ -12,9 +12,9 @@ class _ActivityState extends State<Activity> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Activity'),
+        title: const Text('Activity'),
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'Activity Page',
           style: TextStyle(fontSize: 40),
